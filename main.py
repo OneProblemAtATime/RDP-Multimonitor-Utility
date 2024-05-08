@@ -3,3 +3,25 @@
 #   |used by the RDP session. After this, it should map
 #   |setting screens to RDP screens and allow the user to
 #   |choose the screens to pass to the RDP session.
+
+import subprocess
+import ast
+
+# Path to your PowerShell script
+script_path = 'rdp_screens_py_dict_output.ps1'
+
+# Command to execute PowerShell script
+command = ['powershell.exe', '-ExecutionPolicy', 'Unrestricted', '-File', script_path]
+
+# Run the PowerShell script
+result = subprocess.run(command, capture_output=True, text=True)
+
+# Get the output as a string and put it into a dictionary
+mstsc_screen_dict = ast.literal_eval(result.stdout.strip())
+
+print(mstsc_screen_dict)
+print(mstsc_screen_dict[0])
+
+
+
+
