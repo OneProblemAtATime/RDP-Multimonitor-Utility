@@ -9,19 +9,23 @@ import ast
 
 # Path to your PowerShell script
 script_path = 'rdp_screens_py_dict_output.ps1'
+script_path_two = 'screens3.ps1'
 
 # Command to execute PowerShell script
-command = ['powershell.exe', '-ExecutionPolicy', 'Unrestricted', '-File', script_path]
+mstsc_screen_command = ['powershell.exe', '-ExecutionPolicy', 'Unrestricted', '-File', script_path]
+system_screen_command = ['powershell.exe', '-ExecutionPolicy', 'Unrestricted', '-File', script_path_two]
 
-# Run the PowerShell script
-result = subprocess.run(command, capture_output=True, text=True)
-
-# Get the output as a string and put it into a dictionary
+# Run the PowerShell script and get the output as a string and put it into a dictionary
+result = subprocess.run(mstsc_screen_command, capture_output=True, text=True)
 mstsc_screen_dict = ast.literal_eval(result.stdout.strip())
+
+result = subprocess.run(system_screen_command, capture_output=True, text=True)
+system_screen_dict = ast.literal_eval(result.stdout.strip())
 
 print(mstsc_screen_dict)
 print(mstsc_screen_dict[0])
 
-
+print(system_screen_dict)
+print(system_screen_dict['____DISPLAY1'])
 
 
