@@ -22,10 +22,23 @@ mstsc_screen_dict = ast.literal_eval(result.stdout.strip())
 result = subprocess.run(system_screen_command, capture_output=True, text=True)
 system_screen_dict = ast.literal_eval(result.stdout.strip())
 
-print(mstsc_screen_dict)
+#print(mstsc_screen_dict)
+#print(mstsc_screen_dict[0])
+
+#print(system_screen_dict)
+#print(system_screen_dict['____DISPLAY3'])
+
+
+print("------------------------------")
 print(mstsc_screen_dict[0])
-
-print(system_screen_dict)
 print(system_screen_dict['____DISPLAY1'])
-
-
+print("------------------------------")
+print(mstsc_screen_dict[1])
+print(system_screen_dict['____DISPLAY2'])
+print("------------------------------")
+print(mstsc_screen_dict[2])
+print(system_screen_dict['____DISPLAY3'])
+print("------------------------------")
+print(mstsc_screen_dict[3])
+print(system_screen_dict['____DISPLAY4'])
+print("------------------------------")
