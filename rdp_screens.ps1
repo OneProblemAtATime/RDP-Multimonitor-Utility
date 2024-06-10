@@ -46,13 +46,6 @@ $pythonList = $rawText -split '\r?\n' | ForEach-Object {
     # Create a string that looks like a Python dictionary
     $index, $width, $height, $left, $top, $right, $bottom = $parts
 
-    $top = [int]$top
-    $bottom = [int]$bottom
-
-    # Multiply the Y values by -1
-    $top = $top * -1
-    $bottom = $bottom * -1
-
     "$index`: {`"Width`": $width, `"Height`": $height, `"TLX`": $left, `"TLY`": $top, `"BRX`": $right, `"BRY`": $bottom},"
   }
 } | Out-String
