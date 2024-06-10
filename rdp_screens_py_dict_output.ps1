@@ -45,7 +45,15 @@ $pythonList = $rawText -split '\r?\n' | ForEach-Object {
     # A well-formed line should have 7 parts
     # Create a string that looks like a Python dictionary
     $index, $width, $height, $left, $top, $right, $bottom = $parts
-    "$index`: {`"Width`": $width, `"Height`": $height, `"Left`": $left, `"Top`": $top, `"Right`": $right, `"Bottom`": $bottom},"
+
+    $top = [int]$top
+    $bottom = [int]$bottom
+
+    # Multiply the Y values by -1
+    $top = $top * -1
+    $bottom = $bottom * -1
+
+    "$index`: {`"Width`": $width, `"Height`": $height, `"TLX`": $left, `"TLY`": $top, `"BRX`": $right, `"BRY`": $bottom},"
   }
 } | Out-String
 
