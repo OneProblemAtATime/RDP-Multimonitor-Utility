@@ -29,30 +29,38 @@ finally {
   $mstscProc | Stop-Process -Force  
 }
 
-#split the raw text an process one line at a time
-$rawText -split '\r?\n' | ForEach-Object {
-    $parts = @()
-    try {
-      #Convert the line format "0: 1920 x 1080; (0, 0, 1919, 1079)" into numbers seperated by , then split
-      $parts = @($_.replace(':', ',').replace(' x ', ',').replace(';', ',').replace('(', '').replace(')', '').replace(' ', '').Trim() -split ',')    
-    }
-    catch {
-      #if any exceptions occur we assume the line is malformed
-      $_ | Write-Verbose
-    }
-    
-    if ($parts.Length -eq 7) {
-      # a wellformed line should have 7 parts
-      $properties = [ordered]@{
-        Index = [int]$parts[0]
-        Width = [int]$parts[1]
-        Height = [int]$parts[2]
-        Left = [int]$parts[3]
-        Top = [int]$parts[4]
-        Right = [int]$parts[5]
-        Bottom = [int]$parts[6]
-      }
-  
-      New-Object -TypeName psobject -Property $properties | Write-Output
-    }
+#split the raw text and process one line at a time
+$pythonList = $rawText -split '\r?\n' | ForEach-Object {
+  $parts = @()
+  try {
+    # Convert the line format "0: 1920 x 1080; (0, 0, 1919, 1079)" into numbers separated by , then split
+    $parts = @($_ -replace ':', ',' -replace ' x ', ',' -replace ';', ',' -replace '[() ]', '').Split(',')    
   }
+  catch {
+    # If any exceptions occur we assume the line is malformed
+    $_ | Write-Verbose
+  }
+  
+  if ($parts.Length -eq 7) {
+    # A well-formed line should have 7 parts
+    # Create a string that looks like a Python dictionary
+    $index, $width, $height, $left, $top, $right, $bottom = $parts
+
+    $top = [int]$top
+    $bottom = [int]$bottom
+
+    # Multiply the Y values by -1
+    $top = $top * -1
+    $bottom = $bottom * -1
+
+    "$index`: {`"Width`": $width, `"Height`": $height, `"TLX`": $left, `"TLY`": $top, `"BRX`": $right, `"BRY`": $bottom},"
+  }
+} | Out-String
+
+# Remove extra newlines and wrap the result in square brackets to form a Python list
+$pythonList = $pythonList.Trim()
+$pythonList = $pythonList.Substring(0, $pythonList.Length-1)
+$pythonList = ($pythonList -replace '\r?\n', ' ')
+$pythonList = "{" + $pythonList + "}"
+$pythonList
+

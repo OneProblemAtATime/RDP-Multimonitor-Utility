@@ -8,7 +8,7 @@ import subprocess
 import ast
 
 # Path to your PowerShell script
-script_path = 'rdp_screens_py_dict_output.ps1'
+script_path = 'rdp_screens.ps1'
 
 # Command to execute PowerShell script
 mstsc_screen_command = ['powershell.exe', '-ExecutionPolicy', 'Unrestricted', '-File', script_path]
