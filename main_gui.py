@@ -13,7 +13,7 @@ class Multiscreen_RDP_util(ctk.CTk):
         self.title("Multi-monitor RDP Utility")
         #self.iconbitmap("icon.ico")
         self.geometry("800x800")
-        self.resizable(False, False)   
+        self.resizable(True, True)   
 
         self.canvas = tk.Canvas(self, width=800, height=400, bg=self.cget("fg_color")[0], highlightthickness=0)
         self.canvas.pack()
@@ -31,8 +31,8 @@ class Multiscreen_RDP_util(ctk.CTk):
         self.create_monitor_boxes()
 
     def create_monitor_boxes(self):
-        self.scale_factor = 0.1  # Scaling down by one decimal place
-        self.gap = 100*self.scale_factor
+        self.scale_factor = .1  # Scaling down by one decimal place
+        self.gap = 30*self.scale_factor
         self.update()  # Required to use the .winfo_width/.winfo_height attributes
 
         self.bbox = [float('inf'), float('inf'), float('-inf'), float('-inf')]  # Initialize bbox
