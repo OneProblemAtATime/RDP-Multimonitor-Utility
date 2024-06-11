@@ -11,7 +11,7 @@ class Multiscreen_RDP_util(ctk.CTk):
     def __init__(self):
         super().__init__()
         self.title("Multi-monitor RDP Utility")
-        self.geometry("800x800")
+        self.geometry("800x400")
         self.resizable(True, True)
 
         self.monitors = []
@@ -24,18 +24,22 @@ class Multiscreen_RDP_util(ctk.CTk):
         self.create_load_list()
 
     def create_widgets(self):
-        self.canvas = tk.Canvas(self, width=800, height=300, bg=self.cget("fg_color")[0], highlightthickness=0)
+        self.canvas = tk.Canvas(self, width=800, height=350, bg=self.cget("fg_color")[0], highlightthickness=0)
         self.canvas.pack()
 
         self.frame = ctk.CTkFrame(self)
         self.frame.pack(fill="both", expand=True)
 
-        self.load_list_frame = ctk.CTkScrollableFrame(self.frame, width=400, height=200, bg_color=self.cget("fg_color")[0])
-        self.load_list_frame.place(relx=0.5, rely=0.5, anchor="center")
-        self.load_list_frame.grid_columnconfigure(0, weight=1)
+        self.load_list_frame = ctk.CTkScrollableFrame(self.frame, bg_color=self.cget("fg_color")[0])
+        self.load_list_frame.pack(padx=10, pady=10, side="left")
+        self.load_list_frame.grid_columnconfigure(1, weight=1)
+            
+        self.interaction_window = ctk.CTkScrollableFrame(self.frame, width=500, height=500, bg_color=self.cget("fg_color")[0])
+        self.interaction_window.pack(padx=10, pady=10, side="right")
+        self.interaction_window.grid_columnconfigure(1, weight=1)
 
     def create_monitor_boxes(self):
-        self.scale_factor = .1
+        self.scale_factor = .07
         self.gap = 30 * self.scale_factor
         self.update()
 
@@ -77,7 +81,7 @@ class Multiscreen_RDP_util(ctk.CTk):
     def create_load_list(self):
         self.slot_colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'cyan', 'magenta']
         for i in range(len(mstsc_screen_dict)):
-            slot = ctk.CTkFrame(self.load_list_frame, bg_color="white", width=280, height=50)
+            slot = ctk.CTkFrame(self.load_list_frame, bg_color="white", width=280, height=10)
             slot.pack(padx=10, pady=5, fill="x")
             slot.bind("<Button-1>", lambda event, i=i: self.on_slot_click(event, i))
             self.load_slots[i] = None
