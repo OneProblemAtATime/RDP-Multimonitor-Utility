@@ -1,4 +1,10 @@
-import modded_libs.customtkinter as ctk, tkinter as tk, ast, subprocess, os, sys, tkinterdnd2 as tkdnd
+import modded_libs.customtkinter as ctk
+import tkinter as tk
+import ast
+import subprocess
+import os
+import sys
+import tkinterdnd2 as tkdnd
 from tkinterdnd2 import DND_FILES, TkinterDnD
 from tkinter import filedialog
 
@@ -15,21 +21,38 @@ class DragAndDropWindow(ctk.CTkFrame):
         
         self.allowed_extensions = allowed_extensions
         self.info_lines = [""] * 3  # Initialize with empty lines
-        
+        self.minimized = False  # Track minimization state
+
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        self.label = ctk.CTkLabel(self, text="Drag a .rdp or .txt onto this window to load it into this software", font=("Arial", 12, "bold"))
-        self.label.grid(row=0, column=0, padx=10, pady=10, sticky="n")
+        # Toggle button
+        self.toggle_button = ctk.CTkButton(self, text="▼", command=self.toggle_minimize, width=20)
+        self.toggle_button.grid(row=0, column=0, padx=10, pady=5, sticky="nw")
 
-        self.info_label = ctk.CTkLabel(self, text="", justify="left")
-        self.info_label.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+        self.label_frame = ctk.CTkFrame(self)
+        self.label_frame.grid(row=1, column=0, padx=10, pady=5, sticky="nsew")
+
+        self.label = ctk.CTkLabel(self.label_frame, text="Drag a .rdp or .txt onto this window to load it into this software", font=("Arial", 12, "bold"))
+        self.label.pack(pady=5)
+
+        self.info_label = ctk.CTkLabel(self.label_frame, text="", justify="left")
+        self.info_label.pack(pady=5)
         self.update_info_terminal()
 
         self.label.bind("<Button-1>", self.load_file)
 
         parent.drop_target_register(DND_FILES)
         parent.dnd_bind('<<Drop>>', self.on_drop)
+
+    def toggle_minimize(self):
+        if self.minimized:
+            self.label_frame.grid()
+            self.toggle_button.configure(text="▼")
+        else:
+            self.label_frame.grid_remove()
+            self.toggle_button.configure(text="▲")
+        self.minimized = not self.minimized
 
     def load_file(self, event=None):
         file_path = filedialog.askopenfilename(filetypes=[("Allowed files", f"*.{ext}") for ext in self.allowed_extensions])
