@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<person>
+    <firstname>first</firstname>
+    <lastname>last</lastname>
+    <home>state</home>
+    <skill name="JavaScript"/>
+    <skill name="Python"/>
+    <skill name="C#"/>
+    <skill name="HTML"/>
+    <skill name="jQuery"/>
+</person>
