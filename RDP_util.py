@@ -10,6 +10,21 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
 
+def Find_RDPs(file_path_list):
+    rdp_files = []
+    for item in file_path_list:
+        if os.path.isfile(item):# Should apply changes to a single RDP file
+            if item.endswith(".rdp"):
+                rdp_files.append(item)
+        elif os.path.isdir(item):# Should apply changes to all RDP files in the directory
+            for root, dirs, files in os.walk(item):
+                for name in files:
+                    if name.endswith(".rdp"):
+                        file_full_path = os.path.join(root, name)
+                        rdp_files.append(file_full_path)
+        else:# Should cancel load if a rdp file has not been found.
+            print(f"No rdp file was found.")
+    return rdp_files# Should return a list of the rdp files to operate on
 class Multiscreen_RDP_util(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -164,10 +179,16 @@ class Multiscreen_RDP_util(ctk.CTk):
         self.mainloop()
 
 if __name__ == '__main__':
-    script_path = resource_path('rdp_screens.ps1')
-    mstsc_screen_command = ['powershell.exe', '-ExecutionPolicy', 'Unrestricted', '-File', script_path]
-    result = subprocess.run(mstsc_screen_command, capture_output=True, text=True)
-    mstsc_screen_dict = ast.literal_eval(result.stdout.strip())
+    rdp_files = Find_RDPs(sys.argv[1:]) if len(sys.argv) > 1 else None
+    print(rdp_files)
+    if rdp_files:
+        script_path = resource_path('rdp_screens.ps1')
+        mstsc_screen_command = ['powershell.exe', '-ExecutionPolicy', 'Unrestricted', '-File', script_path]
+        result = subprocess.run(mstsc_screen_command, capture_output=True, text=True)
+        mstsc_screen_dict = ast.literal_eval(result.stdout.strip())
 
-    app = Multiscreen_RDP_util()
-    app.run()
+        app = Multiscreen_RDP_util()
+        app.run()
+    else:
+        print("No rdp file was found. Please drag a rdp file over the executable to begin. Refer to \"Instructions.txt\" for more information.")
+        input("Press enter to exit...")

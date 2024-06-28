@@ -1,6 +1,6 @@
 """
 Program: File_Explorer_DND_demo.py
-Created by: Joshua Merritt
+Created by: OPAAT
 Created Date: Thursday, June 20, 2024 (10:39.49)
 Notes: This script prints the full path of a file dropped on the
 script from the file explorer as a demo of how to add this

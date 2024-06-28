@@ -17,13 +17,6 @@ class Multiscreen_RDP_util(ctk.CTk):
 
         self.canvas = tk.Canvas(self, width=800, height=400, bg=self.cget("fg_color")[0], highlightthickness=0)
         self.canvas.pack()
-        
-        #self.update()
-        # Vertical line in the center
-        #self.canvas.create_line(self.canvas.winfo_width()/2, 0, self.canvas.winfo_width()/2, self.canvas.winfo_height(), fill='black')
-        # Horizontal line in the center
-        #self.canvas.create_line(0, (self.canvas.winfo_height()/2), self.canvas.winfo_width(), (self.canvas.winfo_height()/2), fill='black')
-
 
         self.monitors = []
         self.selected_monitor = None
