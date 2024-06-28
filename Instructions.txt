@@ -1,0 +1,16 @@
+Developed (May 6th to June 28th, 2024)
+
+
+RDP utility script
+------------------
+
+This script is designed to make multiscreen RDP sessions more convienent by providing a way to easily select any number of screens to use in the session.
+This is resolved from the current all or single options in the basic windows user interface.
+
+Drag a RDP file over the RDP_Util.exe to begin. 
+
+Alternatively, one can can simply use the following for use in a batch script:
+    RPD_util <path/to/the/session.rdp>
+
+
+... More instructions to be filled in ...
