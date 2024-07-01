@@ -11,9 +11,13 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 def json_import_export(path=".", file_name="data.json", mode='r', data=None):
+    if not os.path.exists(f"{path}\\{file_name}"):
+        if mode == 'r': 
+            return
     with open(f"{path}\\{file_name}", f'{mode}') as data_file:
-        return_data = json.load(data_file) if mode == 'w' else json.dump(data, data_file)
+        return_data = json.load(data_file) if mode == 'r' else json.dump(data, data_file)
     return return_data
+    
 
 def Find_RDPs(file_path_list):
     rdp_files = []
@@ -185,10 +189,21 @@ class Multiscreen_RDP_util(ctk.CTk):
         self.mainloop()
 
 if __name__ == '__main__':
-    rdp_files = Find_RDPs(sys.argv[1:]) if len(sys.argv) > 1 else None
-    print(rdp_files)
-    saved_data = json_import_export(path=".", file_name="data.json", mode="w", data=rdp_files)
-    if rdp_files:
+    rdp_files = Find_RDPs(sys.argv[1:]) if len(sys.argv) > 1 else json_import_export(path=".", file_name="data.json", mode="r", data="")
+
+    if rdp_files:# Remove non-existent files
+        # Starting at the last index (e.g. 3) to -1 which will stop at 0 in steps of -1
+        # len(rdp_files)-1 is the index of the last element of the list
+        for i in range(len(rdp_files)-1, -1, -1): 
+            if not os.path.exists(rdp_files[i]):
+                rdp_files.pop(i)
+
+        print(rdp_files)
+
+
+    if rdp_files:# Start up the UI
+        save_file = json_import_export(path=".", file_name="data.json", mode="w", data=rdp_files)
+        
         script_path = resource_path('rdp_screens.ps1')
         mstsc_screen_command = ['powershell.exe', '-ExecutionPolicy', 'Unrestricted', '-File', script_path]
         result = subprocess.run(mstsc_screen_command, capture_output=True, text=True)
