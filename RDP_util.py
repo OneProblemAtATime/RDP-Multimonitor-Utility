@@ -1,4 +1,4 @@
-import ast, subprocess, os, sys
+import ast, subprocess, os, sys, json
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import filedialog
@@ -9,6 +9,11 @@ def resource_path(relative_path):
     except Exception:
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
+
+def json_import_export(path=".", file_name="data.json", mode='r', data=None):
+    with open(f"{path}\\{file_name}", f'{mode}') as data_file:
+        return_data = json.load(data_file) if mode == 'w' else json.dump(data, data_file)
+    return return_data
 
 def Find_RDPs(file_path_list):
     rdp_files = []
@@ -24,6 +29,7 @@ def Find_RDPs(file_path_list):
                         rdp_files.append(file_full_path)
         else:# Should cancel load if a rdp file has not been found.
             print(f"No rdp file was found.")
+            return None
     return rdp_files# Should return a list of the rdp files to operate on
 class Multiscreen_RDP_util(ctk.CTk):
     def __init__(self):
@@ -181,6 +187,7 @@ class Multiscreen_RDP_util(ctk.CTk):
 if __name__ == '__main__':
     rdp_files = Find_RDPs(sys.argv[1:]) if len(sys.argv) > 1 else None
     print(rdp_files)
+    saved_data = json_import_export(path=".", file_name="data.json", mode="w", data=rdp_files)
     if rdp_files:
         script_path = resource_path('rdp_screens.ps1')
         mstsc_screen_command = ['powershell.exe', '-ExecutionPolicy', 'Unrestricted', '-File', script_path]
