@@ -35,6 +35,7 @@ def Find_RDPs(file_path_list):
             print(f"No rdp file was found.")
             return None
     return rdp_files# Should return a list of the rdp files to operate on
+
 class Multiscreen_RDP_util(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -65,6 +66,40 @@ class Multiscreen_RDP_util(ctk.CTk):
         self.interaction_window = ctk.CTkScrollableFrame(self.frame, width=500, height=500, bg_color=self.cget("fg_color")[0])
         self.interaction_window.pack(padx=10, pady=10, side="right", fill="both", expand=True)
         self.interaction_window.grid_columnconfigure(1, weight=1)
+
+        # Column 1
+        self.toggle_1 = ctk.CTkSwitch(self.interaction_window, text="Toggle 1")
+        self.toggle_1.grid(row=0, column=0, padx=10, pady=10)
+
+        self.text_entry_1 = ctk.CTkEntry(self.interaction_window, placeholder_text="Enter text 1")
+        self.text_entry_1.grid(row=1, column=0, padx=10, pady=10, columnspan=2)
+
+        self.button_1 = ctk.CTkButton(self.interaction_window, text="Button 1", command=self.button_1_click)
+        self.button_1.grid(row=2, column=0, padx=10, pady=10)
+
+        self.label_1 = ctk.CTkLabel(self.interaction_window, text="Label 1")
+        self.label_1.grid(row=3, column=0, padx=10, pady=10)
+
+        # Column 2
+        self.toggle_2 = ctk.CTkSwitch(self.interaction_window, text="Toggle 2")
+        self.toggle_2.grid(row=0, column=1, padx=10, pady=10)
+
+        #self.text_entry_2 = ctk.CTkEntry(self.interaction_window, placeholder_text="Enter text 2")
+        #self.text_entry_2.grid(row=1, column=1, padx=10, pady=10)
+
+        self.button_2 = ctk.CTkButton(self.interaction_window, text="Button 2", command=self.button_2_click)
+        self.button_2.grid(row=2, column=1, padx=10, pady=10)
+
+        self.label_2 = ctk.CTkLabel(self.interaction_window, text="Label 2")
+        self.label_2.grid(row=3, column=1, padx=10, pady=10)
+
+    def button_1_click(self):
+        # Define what happens when button 1 is clicked
+        print(f"Button 1 clicked, text: {self.text_entry_1.get()}")
+
+    def button_2_click(self):
+        # Define what happens when button 2 is clicked
+        print(f"Button 2 clicked, text: {self.text_entry_2.get()}")
 
     def create_monitor_boxes(self):
         self.scale_factor = .07
