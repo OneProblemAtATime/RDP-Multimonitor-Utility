@@ -67,6 +67,7 @@ class Multiscreen_RDP_util(ctk.CTk):
         self.interaction_window.pack(padx=10, pady=10, side="right", fill="both", expand=True)
         self.interaction_window.grid_columnconfigure(1, weight=1)
 
+        ##### Interactables for changing operations to an RDP session.
         # Column 1
         self.toggle_1 = ctk.CTkSwitch(self.interaction_window, text="Toggle 1")
         self.toggle_1.grid(row=0, column=0, padx=10, pady=10)
