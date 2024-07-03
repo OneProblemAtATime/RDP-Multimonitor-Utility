@@ -18,7 +18,6 @@ def json_import_export(path=".", file_name="data.json", mode='r', data=None):
         return_data = json.load(data_file) if mode == 'r' else json.dump(data, data_file)
     return return_data
     
-
 def Find_RDPs(file_path_list):
     rdp_files = []
     for item in file_path_list:
@@ -68,6 +67,17 @@ class Multiscreen_RDP_util(ctk.CTk):
         self.interaction_window.grid_columnconfigure(1, weight=1)
 
         ##### Interactables for changing operations to an RDP session.
+        # IP address select
+        # Short and long description
+        # Import/Export IP Address config
+        # Handle monitor configuration change rules
+        # Quick defaults for running in a directory with one or more rdps to configure
+        # Import/Export full profile
+        # Connect now
+        # Save auto connect ip address set
+        # (Side note: should make a batch script to call this in quick and auto connect mode)
+        # (Side note: can I change something in the batch script to carry around when moved?)
+
         # Column 1
         self.toggle_1 = ctk.CTkSwitch(self.interaction_window, text="Toggle 1")
         self.toggle_1.grid(row=0, column=0, padx=10, pady=10)
