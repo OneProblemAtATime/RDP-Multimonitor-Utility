@@ -11,12 +11,28 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 def json_import_export(path=".", file_name="data.json", mode='r', data=None):
-    if not os.path.exists(f"{path}\\{file_name}"):
-        if mode == 'r': 
-            return
+    return_data = None
     with open(f"{path}\\{file_name}", f'{mode}') as data_file:
-        return_data = json.load(data_file) if mode == 'r' else json.dump(data, data_file)
+        if os.path.exists(f"{path}\\{file_name}") or mode == 'w':
+            return_data = json.load(data_file) if mode == 'r' else json.dump(data, data_file)
     return return_data
+
+def file_read_write(path=".", file_name="session.rdp", mode='r', data=[]):
+    return_data = None
+    if not os.path.exists(f"{path}\\{file_name}"):
+        if mode == 'w':
+            with open(f"{path}\\{file_name}", f'{mode}') as data_file:
+                for i in range(len(data)):
+                    return_data += f"{data[i]}\n"
+                data_file.write(return_data)
+    else:
+        if mode == 'r':
+            with open(f"{path}\\{file_name}", f'{mode}b') as data_file:
+                return_data = data_file.readlines()
+                for i, line_data in enumerate(return_data):
+                    return_data[i] = line_data.decode('utf-8')
+    return return_data
+        
     
 def Find_RDPs(file_path_list):
     rdp_files = []
@@ -246,6 +262,8 @@ if __name__ == '__main__':
 
         print(rdp_files)
 
+    rdp_commands = file_read_write(path=".\\rdp\\", file_name="full screen.rdp", mode="r", data=None)
+    print(rdp_commands)
 
     if rdp_files:# Start up the UI
         save_file = json_import_export(path=".", file_name="data.json", mode="w", data=rdp_files)
