@@ -1,4 +1,4 @@
-import ast, subprocess, os, sys, json
+import ast, subprocess, os, sys, json, fnmatch
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import filedialog
@@ -19,18 +19,16 @@ def json_import_export(path=".", file_name="data.json", mode='r', data=None):
 
 def file_read_write(path=".", file_name="session.rdp", mode='r', data=[]):
     return_data = None
-    if not os.path.exists(f"{path}\\{file_name}"):
-        if mode == 'w':
+    if mode == 'w':
             with open(f"{path}\\{file_name}", f'{mode}') as data_file:
+                return_data = ""
                 for i in range(len(data)):
-                    return_data += f"{data[i]}\n"
+                    return_data += data[i]
                 data_file.write(return_data)
-    else:
+    if os.path.exists(f"{path}\\{file_name}"):
         if mode == 'r':
-            with open(f"{path}\\{file_name}", f'{mode}b') as data_file:
+            with open(f"{path}\\{file_name}", f'{mode}') as data_file:
                 return_data = data_file.readlines()
-                for i, line_data in enumerate(return_data):
-                    return_data[i] = line_data.decode('utf-8')
     return return_data
         
     
@@ -62,6 +60,7 @@ class Multiscreen_RDP_util(ctk.CTk):
         self.selected_slot = None
         self.load_slots = {}
         self.slot_frames = {}
+        self.loaded_monitors = []
 
         self.create_widgets()
         self.create_monitor_boxes()
@@ -94,22 +93,23 @@ class Multiscreen_RDP_util(ctk.CTk):
         # (Side note: should make a batch script to call this in quick and auto connect mode)
         # (Side note: can I change something in the batch script to carry around when moved?)
 
+
+        self.ipField = ctk.CTkEntry(self.interaction_window, placeholder_text="Enter IP address")
+        self.ipField.grid(row=1, column=0, padx=10, pady=10, columnspan=2)
+
+        self.save = ctk.CTkButton(self.interaction_window, text="Save", command=self.save_click)
+        self.save.grid(row=0, column=0, padx=10, pady=10, columnspan=2)
+
         # Column 1
-        self.toggle_1 = ctk.CTkSwitch(self.interaction_window, text="Toggle 1")
-        self.toggle_1.grid(row=0, column=0, padx=10, pady=10)
-
-        self.text_entry_1 = ctk.CTkEntry(self.interaction_window, placeholder_text="Enter text 1")
-        self.text_entry_1.grid(row=1, column=0, padx=10, pady=10, columnspan=2)
-
-        self.button_1 = ctk.CTkButton(self.interaction_window, text="Button 1", command=self.button_1_click)
-        self.button_1.grid(row=2, column=0, padx=10, pady=10)
+        #self.toggle_1 = ctk.CTkSwitch(self.interaction_window, text="Toggle 1")
+        #self.toggle_1.grid(row=0, column=0, padx=10, pady=10)
 
         self.label_1 = ctk.CTkLabel(self.interaction_window, text="Label 1")
         self.label_1.grid(row=3, column=0, padx=10, pady=10)
 
         # Column 2
-        self.toggle_2 = ctk.CTkSwitch(self.interaction_window, text="Toggle 2")
-        self.toggle_2.grid(row=0, column=1, padx=10, pady=10)
+        #self.toggle_2 = ctk.CTkSwitch(self.interaction_window, text="Toggle 2")
+        #self.toggle_2.grid(row=0, column=1, padx=10, pady=10)
 
         #self.text_entry_2 = ctk.CTkEntry(self.interaction_window, placeholder_text="Enter text 2")
         #self.text_entry_2.grid(row=1, column=1, padx=10, pady=10)
@@ -120,9 +120,15 @@ class Multiscreen_RDP_util(ctk.CTk):
         self.label_2 = ctk.CTkLabel(self.interaction_window, text="Label 2")
         self.label_2.grid(row=3, column=1, padx=10, pady=10)
 
-    def button_1_click(self):
-        # Define what happens when button 1 is clicked
-        print(f"Button 1 clicked, text: {self.text_entry_1.get()}")
+    def save_click(self):
+        # Save screens to RDP file
+        # Set selectedmonitors to self.loaded_monitors
+        for i, element in enumerate(rdp_commands):
+            if "selectedmonitors:" in element:
+                rdp_commands[i] = "selectedmonitors:s:"
+                rdp_commands[i] += str(self.loaded_monitors).replace("[", "").replace("]", "").replace(" ", "")
+                rdp_commands[i] += "\r"
+        file_read_write(path=".", file_name="test.txt", mode='w', data=rdp_commands)
 
     def button_2_click(self):
         # Define what happens when button 2 is clicked
@@ -240,8 +246,9 @@ class Multiscreen_RDP_util(ctk.CTk):
         slot.label.config(text=f"Monitor {monitor_id}", bg=self.slot_colors[slot_index], fg="gray50")
 
     def print_loaded_monitors(self):
-        loaded_monitors = [self.load_slots[i]-1 for i in sorted(self.load_slots.keys()) if self.load_slots[i] is not None]
-        print(loaded_monitors)
+        self.loaded_monitors = [self.load_slots[i]-1 for i in sorted(self.load_slots.keys()) if self.load_slots[i] is not None]
+        
+        print(self.loaded_monitors)
 
     def run(self):
         self.update_idletasks()  # Update the geometry of all widgets
@@ -262,8 +269,7 @@ if __name__ == '__main__':
 
         print(rdp_files)
 
-    rdp_commands = file_read_write(path=".\\rdp\\", file_name="full screen.rdp", mode="r", data=None)
-    print(rdp_commands)
+    rdp_commands = file_read_write(path=".\\rdp\\", file_name="multi_screen.rdp", mode="r", data=None)
 
     if rdp_files:# Start up the UI
         save_file = json_import_export(path=".", file_name="data.json", mode="w", data=rdp_files)
